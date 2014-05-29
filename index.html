@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>手机联村村</title>
+    <title>每周关注</title>
     <link id="css" rel="stylesheet" href="css/jquery.mobile-1.4.2.css">
     <script src="js/jquery.js"></script>
     <script src="js/jquery.mobile-1.4.2.js"></script>
@@ -26,18 +26,19 @@
 	    			var a=document.createElement("a");
 	    			a.title=json[i].bza;
 	    			a.innerHTML=json[i].title;
+	    			a.dataTransition="flip";
+	    			a.href="#news";
 	    			a.index=i;
 	    			a.className="ui-btn ui-btn-icon-right ui-icon-carat-r";
-	    			a.dataTransition="slide";
 	    			a.onclick=function(){
 	    				document.getElementById("title").innerHTML=json[this.index].title;
 	    				document.getElementById("bza").innerHTML=json[this.index].bza;
 	    				document.getElementById("text").innerHTML=json[this.index].text;
 	    				document.getElementById("xj").innerHTML=json[this.index].xj;
-	    				document.getElementById("news20").style.display="none";
-	    				document.getElementById("page").style.display="block";
-	    				document.getElementById("return").style.display="block";
-	    				document.getElementById("get").style.display="none";
+	    				//document.getElementById("news20").style.display="none";
+	    				//document.getElementById("page").style.display="block";
+	    				//document.getElementById("return").style.display="block";
+	    				//document.getElementById("get").style.display="none";
 	    			}
 	    			li.appendChild(a);
 	    			document.getElementById("news20").appendChild(li);
@@ -53,64 +54,59 @@
     		document.getElementById("jsbox").innerHTML="";
     		document.getElementById("jsbox").appendChild(s);
     	}
+    	function returnindex(){
+    		json=JSON.parse(localStorage.getItem("news"));
+    		getlist(json);
+    	}
     	function init(){
-		(function($){
-			$.getUrlParam = function(name){
-				var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
-				var r = window.location.search.substr(1).match(reg);
-				if (r!=null) return unescape(r[2]); return null;
-			}
-		}
-		)(jQuery);
     		$("#mypanel").trigger("updatelayout");
     		getlist();
     		setInterval(function(){
 				query();
-		},1000*60);
+			},1000*60);
     	}
     	window.onload=init;
     </script>
 <body>
-	<div data-role="page">
-		<div data-role="panel" id="mypanel">
+<div id="jsbox"></div>
+<div data-role="page" id="index">
+  <div data-role="header">
+    <a href="#" data-role="button" data-icon="home">首页</a>
+    <h1>每周关注</h1>
+    <a href="#mypanel" data-role="button" data-icon="info">关于</a>
+  </div>
+  <div data-role="content">
+  	<a id="get" onclick="query();" data-role="button" data-icon="refresh">刷新</a>
+    <ol id="news20" data-role="listview" data-inset="true"></ol>
+  </div>
+  <div data-role="panel" id="mypanel">
 			<p>每周关注</p>
 			<p>www.lcvlcv.com</p>
-			<p>g@codetyphon.com</p>
+			<p>内容皆由村官与自愿者推荐,如有侵权,请联系我们,我们立刻删除.</p>
+			<p>联系电话:010-66115942</p>
 			<a href="#" data-rel="close">关闭</a>
 		    <!-- panel content goes here -->
-		</div><!-- /panel -->
-		<div data-role="panel" id="week">
-			<p>每周关注</p>
-			
-			<a href="#" data-rel="close">关闭</a>
-		    <!-- panel content goes here -->
-		</div><!-- /panel -->
-		<div data-role="panel" id="news">
-			<p>联村新闻</p>
-			
-			<a href="#" data-rel="close">关闭</a>
-		    <!-- panel content goes here -->
-		</div><!-- /panel -->
-		<div id="jsbox"></div>
-			<div data-role="navbar">
-			    <ul>
-				<li><a href="#news" class="ui-btn-active">联村新闻</a></li>
-			       <li><a href="#week" class="ui-btn-active">每周关注</a></li>
-			       <li><a href="#mypanel" class="ui-btn-active">关于</a></li>
-			    </ul>
-			</div><!-- /navbar -->
-		<button id="get" onclick="query();">刷新</button>
-		<button id="return" style="display: none;" onclick='document.getElementById("news20").style.display="block";document.getElementById("page").style.display="none";document.getElementById("return").style.display="none";document.getElementById("get").style.display="block";'>返回</button>
-		<div id="page">
-			<h2 id="title"></h2>
-			<p id="bza"></p>
-			<p id="text"></p>
-			<p id="xj"></p>
-		</div>
-		<ol id="news20" data-role="listview" data-inset="true"></ol>
-		<div data-role="footer">
-		    <h1>每周关注</h1>
-		</div>
+  </div><!-- /panel -->
+  <div data-role="footer">
+    <h1>每周关注v1.01 技术支持:g@codetyphon.com</h1>
+  </div>
+</div>	
+
+  <div data-role="page" id="news">
+  	<div data-role="header">
+	    <a href="#index" data-role="button" data-icon="home">返回首页</a>
+	    <h1>每周关注</h1>
+	    <a href="#mypanel" data-role="button" data-icon="info">关于</a>
+	  </div>
+  	<div data-role="content">
+	  			<div id="return" data-role="button" data-icon="home" style="display: none;" onclick='document.getElementById("news20").style.display="block";document.getElementById("page").style.display="none";document.getElementById("return").style.display="none";document.getElementById("get").style.display="block";'>返回</div>
+				<h2 id="title"></h2>
+				<p id="bza"></p>
+				<p id="text"></p>
+				<p id="xj"></p>
+	</div>
+	<div data-role="footer">
+	    <h1>每周关注v1.01 技术支持:g@codetyphon.com</h1>
 	</div>
 </body>
 </html>
