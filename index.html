@@ -28,6 +28,7 @@
 	    			a.innerHTML=json[i].title;
 	    			a.index=i;
 	    			a.className="ui-btn ui-btn-icon-right ui-icon-carat-r";
+	    			a.dataTransition="slide";
 	    			a.onclick=function(){
 	    				document.getElementById("title").innerHTML=json[this.index].title;
 	    				document.getElementById("bza").innerHTML=json[this.index].bza;
