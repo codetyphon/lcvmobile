@@ -1,14 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>每周关注</title>
-    <link id="css" rel="stylesheet" href="css/jquery.mobile-1.4.2.css">
-    <script src="js/jquery.js"></script>
-    <script src="js/jquery.mobile-1.4.2.js"></script>
-    <script>
-    	function callback(){getlist(json);}
+  <meta charset="utf-8">
+  <title></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link href="style.css" rel="stylesheet">
+  <link href="css/jquery.mobile-1.4.2.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script src="js/jquery.js"></script>
+  <script src="js/jquery.mobile-1.4.2.min.js"></script>
+  <script src="js/codiqa.ext.js"></script>
+  <script>
+  		function getnews(json){
+  			document.getElementById("title").innerHTML=json.title;
+  			document.getElementById("text").innerHTML=json.text;
+  		}
     	function getlist(json){
     		if(json==undefined){
     			json=JSON.parse(localStorage.getItem("news"));
@@ -17,96 +25,196 @@
     			}else{
     				getlist(json);
     			}
-    			
+    			$('a').attr("data-transition","flip");
     		}else{
     			document.getElementById("news20").innerHTML='';
     			for(var i in json){
     				;
 	    			var li=document.createElement("li");
 	    			var a=document.createElement("a");
-	    			a.title=json[i].bza;
+	    			a.title=json[i].title;
+	    			a.id=json[i].id;
 	    			a.innerHTML=json[i].title;
-	    			a.dataTransition="flip";
-	    			a.href="#news";
+	    			a.href="#page4";
 	    			a.index=i;
 	    			a.className="ui-btn ui-btn-icon-right ui-icon-carat-r";
 	    			a.onclick=function(){
-	    				document.getElementById("title").innerHTML=json[this.index].title;
-	    				document.getElementById("bza").innerHTML=json[this.index].bza;
-	    				document.getElementById("text").innerHTML=json[this.index].text;
-	    				document.getElementById("xj").innerHTML=json[this.index].xj;
-	    				//document.getElementById("news20").style.display="none";
-	    				//document.getElementById("page").style.display="block";
-	    				//document.getElementById("return").style.display="block";
-	    				//document.getElementById("get").style.display="none";
+	    				var s=document.createElement("script");
+			    		s.src="http://121.197.3.58/2014_dxs_mob/newsjson.php?id="+this.id+"&callbackname=getnews";
+			    		document.getElementById("title").innerHTML="正在获取标题";
+  						document.getElementById("text").innerHTML="正在获取内容";
+			    		document.getElementById("jsbox").innerHTML="";
+    					document.getElementById("jsbox").appendChild(s);
 	    			}
 	    			li.appendChild(a);
 	    			document.getElementById("news20").appendChild(li);
 	    		}
     			$("#get").text('刷新');
     			localStorage.setItem("news", JSON.stringify(json));
+    			$('a').attr("data-transition","flip");
     		}
     	}
     	function query(){
     		$("#get").text("新闻获取中。。。");
     		var s=document.createElement("script");
-    		s.src="http://121.197.3.58/2014_week/json.php?callback="+callback;
+    		s.src="http://121.197.3.58/2014_dxs_mob/json.php?callbackname=getlist";
     		document.getElementById("jsbox").innerHTML="";
     		document.getElementById("jsbox").appendChild(s);
     	}
-    	function returnindex(){
-    		json=JSON.parse(localStorage.getItem("news"));
-    		getlist(json);
-    	}
     	function init(){
-    		$("#mypanel").trigger("updatelayout");
     		getlist();
     		setInterval(function(){
 				query();
-			},1000*60);
+			},3000*60);
     	}
     	window.onload=init;
     </script>
+</head>
 <body>
 <div id="jsbox"></div>
-<div data-role="page" id="index">
-  <div data-role="header">
-    <a href="#" data-role="button" data-icon="home">首页</a>
-    <h1>每周关注</h1>
-    <a href="#mypanel" data-role="button" data-icon="info">关于</a>
-  </div>
-  <div data-role="content">
-  	<a id="get" onclick="query();" data-role="button" data-icon="refresh">刷新</a>
-    <ol id="news20" data-role="listview" data-inset="true"></ol>
-  </div>
-  <div data-role="panel" id="mypanel">
-			<p>每周关注</p>
-			<p>www.lcvlcv.com</p>
-			<p>内容皆由村官与自愿者推荐,如有侵权,请联系我们,我们立刻删除.</p>
-			<p>联系电话:010-66115942</p>
-			<a href="#" data-rel="close">关闭</a>
-		    <!-- panel content goes here -->
-  </div><!-- /panel -->
-  <div data-role="footer">
-    <h1>每周关注v1.01 技术支持:g@codetyphon.com</h1>
-  </div>
-</div>	
-
-  <div data-role="page" id="news">
-  	<div data-role="header">
-	    <a href="#index" data-role="button" data-icon="home">返回首页</a>
-	    <h1>每周关注</h1>
-	    <a href="#mypanel" data-role="button" data-icon="info">关于</a>
-	  </div>
-  	<div data-role="content">
-	  			<div id="return" data-role="button" data-icon="home" style="display: none;" onclick='document.getElementById("news20").style.display="block";document.getElementById("page").style.display="none";document.getElementById("return").style.display="none";document.getElementById("get").style.display="block";'>返回</div>
-				<h2 id="title"></h2>
-				<p id="bza"></p>
-				<p id="text"></p>
-				<p id="xj"></p>
-	</div>
-	<div data-role="footer">
-	    <h1>每周关注v1.01 技术支持:g@codetyphon.com</h1>
-	</div>
+<div data-role="page" data-control-title="大学生村官论坛" id="page1">
+    <div data-theme="a" data-role="header">
+        <h1 class="ui-title">
+            大学生村官论坛
+        </h1>
+    </div>
+    <div role="main" class="ui-content">
+        <ul id="news20" data-role="listview" data-divider-theme="a" data-inset="true">
+            <li data-role="list-divider" role="heading">
+                新闻动态
+            </li>
+            <li data-theme="a">
+                <a href="#page4" data-transition="slide">
+                    演讲比赛
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div data-role="tabbar" data-iconpos="top" data-theme="a">
+        <ul>
+            <li>
+                <a href="#page1" data-transition="fade" data-theme="" data-icon="home">
+                    新闻
+                </a>
+            </li>
+            <li>
+                <a href="#page2" data-transition="fade" data-theme="" data-icon="star">
+                    图片
+                </a>
+            </li>
+            <li>
+                <a href="#page3" data-transition="fade" data-theme="" data-icon="info">
+                    关于
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div data-role="page" data-control-title="page2" id="page2">
+    <div data-theme="a" data-role="header">
+    	<a href="#page1" data-role="button" data-icon="home">返回首页</a>
+        <h1 class="ui-title">
+            论坛图片
+        </h1>
+    </div>
+    <div role="main" class="ui-content">
+        <div style="width: 288px; height: 200px; position: relative; background-color: #fbfbfb; border: 1px solid #b8b8b8;"
+        data-controltype="image">
+            <img src="https://codiqa.com/static/images/v2/image.png" alt="image" style="position: absolute; top: 50%; left: 50%; margin-left: -16px; margin-top: -18px">
+        </div>
+    </div>
+    <div data-role="tabbar" data-iconpos="top" data-theme="a">
+        <ul>
+            <li>
+                <a href="#page1" data-transition="fade" data-theme="" data-icon="home">
+                    新闻
+                </a>
+            </li>
+            <li>
+                <a href="#page2" data-transition="fade" data-theme="" data-icon="star">
+                    图片
+                </a>
+            </li>
+            <li>
+                <a href="#page3" data-transition="fade" data-theme="" data-icon="info">
+                    关于
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div data-role="page" data-control-title="about" id="page3">
+    <div data-theme="a" data-role="header">
+    	<a href="#page1" data-role="button" data-icon="home">返回首页</a>
+        <h1 class="ui-title">关于大学生村官论坛</h1>
+    </div>
+    <div role="main" class="ui-content">
+        <div data-controltype="htmlblock">
+        	<p>浙江省金华市东阳市花园村</p>
+        	<p>敬请期待。。。</p>
+        </div>
+        <hr style="height:3px; background-color:#ccc; border:0; margin-top:12px; margin-bottom:12px;">
+        <div id="googlemapsjs1" class="google-map" style="width: 288px; height: 200px; margin-left: auto; margin-right: auto">
+        </div>
+        <div>
+            <a href="http://dxscg.lcvlcv.com" target="_blank" data-transition="fade">
+                大学生村官论坛官网
+            </a>
+        </div>
+    </div>
+    <div data-role="tabbar" data-iconpos="top" data-theme="a">
+        <ul>
+            <li>
+                <a href="#page1" data-transition="fade" data-theme="" data-icon="home">
+                    新闻
+                </a>
+            </li>
+            <li>
+                <a href="#page2" data-transition="fade" data-theme="" data-icon="star">
+                    图片
+                </a>
+            </li>
+            <li>
+                <a href="#page3" data-transition="fade" data-theme="" data-icon="info">
+                    关于
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div data-role="page" data-control-title="news" id="page4">
+    <div data-theme="a" data-role="header">
+    	<a href="#page1" data-role="button" data-icon="home">返回首页</a>
+        <h1 class="ui-title">
+            大学生村官论坛
+        </h1>
+    </div>
+    <div role="main" class="ui-content">
+        <h3 id="title">
+            title
+        </h3>
+        <div id="text" data-controltype="htmlblock">
+        </div>
+    </div>
+    <div data-role="tabbar" data-iconpos="top" data-theme="a">
+        <ul>
+            <li>
+                <a href="#page1" data-transition="fade" data-theme="" data-icon="home">
+                    新闻
+                </a>
+            </li>
+            <li>
+                <a href="#page2" data-transition="fade" data-theme="" data-icon="star">
+                    图片
+                </a>
+            </li>
+            <li>
+                <a href="#page3" data-transition="fade" data-theme="" data-icon="info">
+                    关于
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
 </body>
 </html>
